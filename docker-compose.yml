@@ -2,28 +2,25 @@
 version: '3'
 services:
   postgres:
-    image: postgres:13
+    image: postgres:13.0
+		shm_size: 4g
     restart: always
-    ports:
-      - "5432:5432"
+    network_mode: "host"
     environment:
-      - POSTGRES_DB=database
+      - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=DaVinci
-      - TZ=America/Chicago
+      - TZ=Asia/Kuala_Lumpur
     volumes:
-      - "resolve-db:/var/lib/postgresql/data"
-  pgbackups:
+      - "/volume1/YourPGSQLDestinationFolder:/var/lib/postgresql/data" ; path to postgresql destination  
+pgbackups:
     image: prodrigestivill/postgres-backup-local:13
     restart: always
     volumes:
-      - "(location you want backups stored):/backups"
-    links:
-      - postgres
-    depends_on:
-      - postgres
+      - "/volume1/YourBackupDestinationFolder:/backups" ; path to resolve backup folder
+    network_mode: "host"
     environment:
-      - POSTGRES_HOST=postgres
+      - POSTGRES_HOST=localhost
       - POSTGRES_DB=database
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=DaVinci
@@ -34,6 +31,6 @@ services:
       - BACKUP_KEEP_WEEKS=4
       - BACKUP_KEEP_MONTHS=6
       - HEALTHCHECK_PORT=8080
-      - TZ=America/Chicago
+      - TZ=Asia/Kuala_Lumpur
 volumes:
   resolve-db:
