@@ -3,7 +3,7 @@ version: '3'
 services:
   postgres:
     image: postgres:13.0
-		shm_size: 4g
+    shm_size: 4g
     restart: always
     network_mode: "host"
     environment:
